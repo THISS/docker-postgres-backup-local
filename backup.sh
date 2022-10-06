@@ -114,21 +114,21 @@ for DB in ${POSTGRES_DBS}; do
     mv "${MFILENEW}" "${MFILE}"
   else
     echo "Replacing daily backup ${DFILE} file this last backup..."
-    ln -vf "${FILE}" "${DFILE}"
+    cp -f "${FILE}" "${DFILE}"
     echo "Replacing weekly backup ${WFILE} file this last backup..."
-    ln -vf "${FILE}" "${WFILE}"
+    cp -f "${FILE}" "${WFILE}"
     echo "Replacing monthly backup ${MFILE} file this last backup..."
-    ln -vf "${FILE}" "${MFILE}"
+    cp -f "${FILE}" "${MFILE}"
   fi
   # Update latest symlinks
   echo "Point last backup file to this last backup..."
-  ln -svf "${LAST_FILENAME}" "${BACKUP_DIR}/last/${DB}-latest${BACKUP_SUFFIX}"
+  cp -f "${LAST_FILENAME}" "${BACKUP_DIR}/last/${DB}-latest${BACKUP_SUFFIX}"
   echo "Point latest daily backup to this last backup..."
-  ln -svf "${DAILY_FILENAME}" "${BACKUP_DIR}/daily/${DB}-latest${BACKUP_SUFFIX}"
+  cp -f "${DAILY_FILENAME}" "${BACKUP_DIR}/daily/${DB}-latest${BACKUP_SUFFIX}"
   echo "Point latest weekly backup to this last backup..."
-  ln -svf "${WEEKLY_FILENAME}" "${BACKUP_DIR}/weekly/${DB}-latest${BACKUP_SUFFIX}"
+  cp -f "${WEEKLY_FILENAME}" "${BACKUP_DIR}/weekly/${DB}-latest${BACKUP_SUFFIX}"
   echo "Point latest monthly backup to this last backup..."
-  ln -svf "${MONTHY_FILENAME}" "${BACKUP_DIR}/monthly/${DB}-latest${BACKUP_SUFFIX}"
+  cp -f "${MONTHY_FILENAME}" "${BACKUP_DIR}/monthly/${DB}-latest${BACKUP_SUFFIX}"
   #Clean old files
   echo "Cleaning older files for ${DB} database from ${POSTGRES_HOST}..."
   find "${BACKUP_DIR}/last" -maxdepth 1 -mmin "+${KEEP_MINS}" -name "${DB}-*${BACKUP_SUFFIX}" -exec rm -rvf '{}' ';'
@@ -136,7 +136,6 @@ for DB in ${POSTGRES_DBS}; do
   find "${BACKUP_DIR}/weekly" -maxdepth 1 -mtime "+${KEEP_WEEKS}" -name "${DB}-*${BACKUP_SUFFIX}" -exec rm -rvf '{}' ';'
   find "${BACKUP_DIR}/monthly" -maxdepth 1 -mtime "+${KEEP_MONTHS}" -name "${DB}-*${BACKUP_SUFFIX}" -exec rm -rvf '{}' ';'
 done
-
 echo "SQL backup created successfully"
 
 # Post-backup hook
